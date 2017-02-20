@@ -3,12 +3,12 @@ package com.sdzee.dao;
 import static com.sdzee.dao.DAOUtilitaire.fermeturesSilencieuses;
 import static com.sdzee.dao.DAOUtilitaire.initialisationRequetePreparee;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
 import com.sdzee.beans.Client;
 
 public class ClientDaoImpl implements ClientDao {
@@ -31,8 +31,8 @@ public class ClientDaoImpl implements ClientDao {
 
         try {
             /* Récupération d'une connexion depuis la Factory */
-            connexion = (Connection) daoFactory.getConnection();
-            preparedStatement = (PreparedStatement) initialisationRequetePreparee( connexion, SQL_SELECT_PAR_EMAIL,
+            connexion = daoFactory.getConnection();
+            preparedStatement = initialisationRequetePreparee( connexion, SQL_SELECT_PAR_EMAIL,
                     false, email );
             resultSet = preparedStatement.executeQuery();
             /*
@@ -55,13 +55,13 @@ public class ClientDaoImpl implements ClientDao {
      */
     @Override
     public void creerClient( Client client ) throws IllegalArgumentException, DAOException {
-        Connection connexion = null;
+        java.sql.Connection connexion = null;
         PreparedStatement preparedStatement = null;
         ResultSet valeursAutoGenerees = null;
 
         try {
             /* Récupération d'une connexion depuis la Factory */
-            connexion = (Connection) daoFactory.getConnection();
+            connexion = daoFactory.getConnection();
             preparedStatement = (PreparedStatement) initialisationRequetePreparee( connexion, SQL_INSERT, true,
                     client.getPrenom(), client.getNom(), client.getAdresse(), client.getEmail(), client.getTelephone(),
                     client.getImage() );
@@ -112,15 +112,15 @@ public class ClientDaoImpl implements ClientDao {
 
     @Override
     public ArrayList<Client> listerClients() throws DAOException {
-        Connection connexion = null;
-        PreparedStatement preparedStatement = null;
+        java.sql.Connection connexion = null;
+        java.sql.PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         ArrayList<Client> clients = new ArrayList<>();
 
         try {
             /* Récupération d'une connexion depuis la Factory */
-            connexion = (Connection) daoFactory.getConnection();
-            preparedStatement = (PreparedStatement) initialisationRequetePreparee( connexion, SQL_LISTE, false );
+            connexion = daoFactory.getConnection();
+            preparedStatement = initialisationRequetePreparee( connexion, SQL_LISTE, false );
             resultSet = preparedStatement.executeQuery();
             /*
              * Parcours de la ligne de données de l'éventuel ResulSet retourné
@@ -152,11 +152,10 @@ public class ClientDaoImpl implements ClientDao {
         try {
             client.setId( resultSet.getLong( "idclient" ) );
         } catch ( Exception e ) {
-            System.out.println( "Erreur id line 124" );
+            throw new DAOException( e );
         }
         client.setEmail( resultSet.getString( "email" ) );
         client.setNom( resultSet.getString( "nom" ) );
-        System.out.println( client.getNom() );
         client.setAdresse( resultSet.getString( "adresse" ) );
         client.setImage( resultSet.getString( "image" ) );
         client.setPrenom( resultSet.getString( "prenom" ) );

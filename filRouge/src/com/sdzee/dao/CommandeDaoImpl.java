@@ -3,12 +3,12 @@ package com.sdzee.dao;
 import static com.sdzee.dao.DAOUtilitaire.fermeturesSilencieuses;
 import static com.sdzee.dao.DAOUtilitaire.initialisationRequetePreparee;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
 import com.sdzee.beans.Client;
 import com.sdzee.beans.Commande;
 
@@ -23,13 +23,13 @@ public class CommandeDaoImpl implements CommandeDao {
      */
     @Override
     public void creerCommande( Commande commande ) throws DAOException {
-        Connection connexion = null;
+        java.sql.Connection connexion = null;
         PreparedStatement preparedStatement = null;
         ResultSet valeursAutoGenerees = null;
 
         try {
             /* Récupération d'une connexion depuis la Factory */
-            connexion = (Connection) daoFactory.getConnection();
+            connexion = daoFactory.getConnection();
             preparedStatement = (PreparedStatement) initialisationRequetePreparee( connexion, SQL_INSERT, true,
                     commande.getDate(), commande.getMontant(), commande.getModePaiement(), commande.getStatutPaiement(),
                     commande.getModeLivraison(), commande.getStatutLivraison(), commande.getClient().getId() );
