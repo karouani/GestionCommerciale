@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import com.sdzee.beans.Commande;
 import com.sdzee.dao.ClientDao;
 import com.sdzee.dao.DAOFactory;
 
+@WebServlet( "/listeCommandes" )
 public class ListeCommandes extends HttpServlet {
     private static final long  serialVersionUID  = 1L;
     public static final String VUE               = "/WEB-INF/listeCommandes.jsp";
